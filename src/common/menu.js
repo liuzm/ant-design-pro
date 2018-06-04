@@ -43,6 +43,36 @@ const menuData = [
     ],
   },
   {
+    name: '系统管理',
+    icon: 'setting',
+    path: 'system',
+    children: [
+      {
+        name: '角色管理',
+        path: 'role',
+      },
+      {
+        name: '用户管理',
+        path: 'user',
+      },
+      {
+        name: '菜单管理',
+        authority: 'admin',
+        path: 'menu',
+      },
+      {
+        name: '部门管理',
+        authority: 'admin',
+        path: 'dept',
+      },
+      {
+        name: '字典管理',
+        authority: 'admin',
+        path: 'dicts',
+      },
+    ],
+  },
+  {
     name: '列表页',
     icon: 'table',
     path: 'list',

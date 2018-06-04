@@ -1,4 +1,3 @@
-
 import React, { Fragment } from 'react';
 import { Layout, Icon } from 'antd';
 import GlobalFooter from '../components/GlobalFooter';
@@ -9,15 +8,9 @@ const FooterView = () => (
     <GlobalFooter
       links={[
         {
-          key: 'Pro 首页',
-          title: 'Pro 首页',
-          href: 'http://pro.ant.design',
-          blankTarget: true,
-        },
-        {
           key: 'github',
           title: <Icon type="github" />,
-          href: 'https://github.com/ant-design/ant-design-pro',
+          href: 'https://github.com/liuzm/ant-design-pro',
           blankTarget: true,
         },
         {
@@ -29,7 +22,7 @@ const FooterView = () => (
       ]}
       copyright={
         <Fragment>
-          Copyright <Icon type="copyright" /> 2018 蚂蚁金服体验技术部出品
+          Copyright <Icon type="copyright" /> 2018 centipede 技术部研发
         </Fragment>
       }
     />
