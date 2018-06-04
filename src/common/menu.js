@@ -48,24 +48,29 @@ const menuData = [
     path: 'system',
     children: [
       {
+        icon: 'usergroup-add',
         name: '角色管理',
         path: 'role',
       },
       {
+        icon: 'user-add',
         name: '用户管理',
         path: 'user',
       },
       {
+        icon: 'environment',
         name: '菜单管理',
         authority: 'admin',
         path: 'menu',
       },
       {
+        icon: 'team',
         name: '部门管理',
         authority: 'admin',
         path: 'dept',
       },
       {
+        icon: 'appstore-o',
         name: '字典管理',
         authority: 'admin',
         path: 'dicts',
