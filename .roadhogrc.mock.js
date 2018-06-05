@@ -7,6 +7,7 @@ import { getProfileAdvancedData } from './mock/profile';
 import { getNotices } from './mock/notices';
 import { format, delay } from 'roadhog-api-doc';
 import { getProvince, getCity, getArea } from './mock/geographic/geographic';
+import { getUsers, postUser } from './mock/user';
 
 // 是否禁用代理
 const noProxy = process.env.NO_PROXY === 'true';
@@ -104,6 +105,16 @@ const proxy = {
       },
     },
     $body: postRule,
+  },
+  'GET /api/v1/users': getUsers,
+  'POST /api/v1/users': {
+    $params: {
+      pageSize: {
+        desc: '分页',
+        exp: 2,
+      },
+    },
+    $body: postUser,
   },
   'POST /api/forms': (req, res) => {
     res.send({ message: 'Ok' });

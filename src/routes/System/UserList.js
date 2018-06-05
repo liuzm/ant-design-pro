@@ -12,7 +12,6 @@ import {
   Button,
   Dropdown,
   Menu,
-  InputNumber,
   DatePicker,
   Modal,
   message,
@@ -282,9 +281,9 @@ class UpdateForm extends PureComponent {
 }
 
 /* eslint react/no-multi-comp:0 */
-@connect(({ rule, loading }) => ({
-  rule,
-  loading: loading.models.rule,
+@connect(({ user, loading }) => ({
+  user,
+  loading: loading.models.user,
 }))
 @Form.create()
 export default class TableList extends PureComponent {
@@ -300,7 +299,7 @@ export default class TableList extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'rule/fetch',
+      type: 'user/fetch',
     });
   }
 
@@ -399,7 +398,7 @@ export default class TableList extends PureComponent {
     }
 
     dispatch({
-      type: 'rule/fetch',
+      type: 'user/fetch',
       payload: params,
     });
   };
@@ -411,7 +410,7 @@ export default class TableList extends PureComponent {
       formValues: {},
     });
     dispatch({
-      type: 'rule/fetch',
+      type: 'user/fetch',
       payload: {},
     });
   };
@@ -430,7 +429,7 @@ export default class TableList extends PureComponent {
     switch (e.key) {
       case 'remove':
         dispatch({
-          type: 'rule/remove',
+          type: 'user/remove',
           payload: {
             key: selectedRows.map(row => row.key),
           },
@@ -470,7 +469,7 @@ export default class TableList extends PureComponent {
       });
 
       dispatch({
-        type: 'rule/fetch',
+        type: 'user/fetch',
         payload: values,
       });
     });
@@ -491,7 +490,7 @@ export default class TableList extends PureComponent {
 
   handleAdd = fields => {
     this.props.dispatch({
-      type: 'rule/add',
+      type: 'user/add',
       payload: {
         desc: fields.desc,
       },
@@ -503,7 +502,7 @@ export default class TableList extends PureComponent {
 
   handleUpdate = fields => {
     this.props.dispatch({
-      type: 'rule/update',
+      type: 'user/update',
       payload: {
         name: fields.name,
         desc: fields.desc,
@@ -606,7 +605,7 @@ export default class TableList extends PureComponent {
 
   render() {
     const {
-      rule: { data },
+      user: { data },
       loading,
     } = this.props;
     const { selectedRows, modalVisible, updateModalVisible, stepFormValues } = this.state;

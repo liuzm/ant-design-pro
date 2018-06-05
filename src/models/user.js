@@ -1,4 +1,5 @@
-import { query as queryUsers, queryCurrent } from '../services/user';
+import { queryCurrent } from '../services/user';
+import { queryUsers, addUser, updateUser, removeUser } from '../services/api';
 
 export default {
   namespace: 'user',
@@ -6,11 +7,15 @@ export default {
   state: {
     list: [],
     currentUser: {},
+    data: {
+      list: [],
+      pagination: {},
+    },
   },
 
   effects: {
-    *fetch(_, { call, put }) {
-      const response = yield call(queryUsers);
+    *fetch({ payload }, { call, put }) {
+      const response = yield call(queryUsers, payload);
       yield put({
         type: 'save',
         payload: response,
@@ -23,13 +28,37 @@ export default {
         payload: response,
       });
     },
+    *add({ payload, callback }, { call, put }) {
+      const response = yield call(addUser, payload);
+      yield put({
+        type: 'save',
+        payload: response,
+      });
+      if (callback) callback();
+    },
+    *remove({ payload, callback }, { call, put }) {
+      const response = yield call(removeUser, payload);
+      yield put({
+        type: 'save',
+        payload: response,
+      });
+      if (callback) callback();
+    },
+    *update({ payload, callback }, { call, put }) {
+      const response = yield call(updateUser, payload);
+      yield put({
+        type: 'save',
+        payload: response,
+      });
+      if (callback) callback();
+    },
   },
 
   reducers: {
     save(state, action) {
       return {
         ...state,
-        list: action.payload,
+        data: action.payload,
       };
     },
     saveCurrentUser(state, action) {

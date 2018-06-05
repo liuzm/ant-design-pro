@@ -124,3 +124,42 @@ export async function queryNotices() {
 export async function getFakeCaptcha(mobile) {
   return request(`/api/captcha?mobile=${mobile}`);
 }
+
+/**
+ *
+ * @param params
+ * @returns {Promise<Object>}
+ */
+export async function queryUsers(params) {
+  return request(`/api/v1/users?${stringify(params)}`);
+}
+
+export async function removeUser(params) {
+  return request('/api/v1/users', {
+    method: 'POST',
+    body: {
+      ...params,
+      method: 'delete',
+    },
+  });
+}
+
+export async function addUser(params) {
+  return request('/api/v1/users', {
+    method: 'POST',
+    body: {
+      ...params,
+      method: 'post',
+    },
+  });
+}
+
+export async function updateUser(params) {
+  return request('/api/v1/users', {
+    method: 'POST',
+    body: {
+      ...params,
+      method: 'update',
+    },
+  });
+}
