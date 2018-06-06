@@ -163,3 +163,37 @@ export async function updateUser(params) {
     },
   });
 }
+
+export async function menuList(params) {
+  return request(`/api/v1/menus?${stringify(params)}`);
+}
+
+export async function removeMenu(params) {
+  return request('/api/v1/menus', {
+    method: 'POST',
+    body: {
+      ...params,
+      method: 'delete',
+    },
+  });
+}
+
+export async function addMenu(params) {
+  return request('/api/v1/menus', {
+    method: 'POST',
+    body: {
+      ...params,
+      method: 'post',
+    },
+  });
+}
+
+export async function updateMenu(params) {
+  return request('/api/v1/menus', {
+    method: 'POST',
+    body: {
+      ...params,
+      method: 'update',
+    },
+  });
+}
