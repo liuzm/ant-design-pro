@@ -9,6 +9,7 @@ import { format, delay } from 'roadhog-api-doc';
 import { getProvince, getCity, getArea } from './mock/geographic/geographic';
 import { getUsers, postUser } from './mock/user';
 import { getMenus, postMenu } from './mock/menu';
+import { getRoleList } from './mock/role';
 import { getDictByKey, getDicts, postDict, getDeptByKey } from './mock/dict';
 
 // 是否禁用代理
@@ -119,6 +120,7 @@ const proxy = {
     $body: postUser,
   },
   'GET /api/v1/menus': getMenus,
+  'GET /api/v1/roles': getRoleList,
   'POST /api/v1/menus': {
     $params: {
       pageSize: {

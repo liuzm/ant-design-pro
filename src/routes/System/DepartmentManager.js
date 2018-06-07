@@ -1,4 +1,4 @@
-// #系统设置 - 菜单管理
+// #系统设置 - 部门管理
 import React, { PureComponent } from 'react';
 import {
   Button,
@@ -29,9 +29,9 @@ const style = {
   lineHeight: '25px',
 };
 
-@connect(({ systemmenu, loading }) => ({
-  systemmenu,
-  loading: loading.models.systemmenu,
+@connect(({ systemdepart, loading }) => ({
+  systemdepart,
+  loading: loading.models.systemdepart,
 }))
 @Form.create()
 export default class MenuComponent extends PureComponent {
@@ -68,7 +68,7 @@ export default class MenuComponent extends PureComponent {
 
   deleteMenu = () => {
     this.props.dispatch({
-      type: 'systemmenu/delete',
+      type: 'systemdepart/delete',
       payload: {
         desc: fields.desc,
       },
@@ -80,7 +80,7 @@ export default class MenuComponent extends PureComponent {
       },
     });
     this.props.dispatch({
-      type: 'menu/fetch',
+      type: 'systemdepart/fetch',
       payload: values,
     });
   };
@@ -190,7 +190,7 @@ export default class MenuComponent extends PureComponent {
     const { dispatch } = this.props;
 
     dispatch({
-      type: 'systemmenu/fetch',
+      type: 'systemdepart/fetch',
     });
   }
 
@@ -213,7 +213,7 @@ export default class MenuComponent extends PureComponent {
           }
         });
         this.props.dispatch({
-          type: 'systemmenu/add',
+          type: 'systemdepart/add',
           payload: {
             desc: fields.desc,
           },
@@ -228,7 +228,7 @@ export default class MenuComponent extends PureComponent {
         json['id'] = this.state.id;
 
         this.props.dispatch({
-          type: 'systemmenu/update',
+          type: 'systemdepart/update',
           payload: {
             desc: fields.desc,
           },
@@ -241,7 +241,7 @@ export default class MenuComponent extends PureComponent {
         });
       }
       this.props.dispatch({
-        type: 'systemmenu/fetch',
+        type: 'systemdepart/fetch',
         payload: values,
       });
     }
@@ -250,7 +250,7 @@ export default class MenuComponent extends PureComponent {
   render() {
     const { getFieldDecorator } = this.props.form;
     const {
-      systemmenu: { data },
+      systemdepart: { data },
     } = this.props;
 
     return (

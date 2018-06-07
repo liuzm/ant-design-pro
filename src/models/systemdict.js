@@ -1,8 +1,8 @@
-import { MenuList, removeMenu, addMenu, updateMenu } from '../services/api'
+import { addDict, removeDict, DictList, updateDict } from '../services/api'
 
 export default {
 
-  namespace: 'systemmenu',
+  namespace: 'systemdict',
 
   state: {
     data: {
@@ -13,14 +13,14 @@ export default {
 
   effects: {
     * fetch ({payload}, {call, put}) {
-      const response = yield call(MenuList, payload)
+      const response = yield call(DictList, payload)
       yield put({
         type: 'save',
         payload: response,
       })
     },
     * add ({payload, callback}, {call, put}) {
-      const response = yield call(addMenu, payload)
+      const response = yield call(addDict, payload)
       yield put({
         type: 'save',
         payload: response,
@@ -28,7 +28,7 @@ export default {
       if (callback) callback()
     },
     * remove ({payload, callback}, {call, put}) {
-      const response = yield call(removeMenu, payload)
+      const response = yield call(removeDict, payload)
       yield put({
         type: 'save',
         payload: response,
@@ -36,7 +36,7 @@ export default {
       if (callback) callback()
     },
     * update ({payload, callback}, {call, put}) {
-      const response = yield call(updateMenu, payload)
+      const response = yield call(updateDict, payload)
       yield put({
         type: 'save',
         payload: response,

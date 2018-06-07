@@ -1,4 +1,4 @@
-// #系统设置 - 用户管理
+// # 系统设置 - 字典管理
 import React, { Fragment, PureComponent } from 'react';
 import { connect } from 'dva';
 import moment from 'moment';
@@ -27,7 +27,7 @@ import DynamicCascader from 'components/DynamicCascader';
 import config from '../../utils/config';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 
-import styles from './UserList.less';
+import styles from './DictList.less';
 
 const FormItem = Form.Item;
 const { Step } = Steps;
@@ -106,7 +106,7 @@ class CreateForm extends PureComponent {
               url={config.api.deptsAll}
               expandTrigger="hover"
               onChange={value => this.onValueChange(value)}
-              cvalue={this.state.value}
+              value={this.state.value}
               getPopupContainer={this.getContainer}
             />
           )}
@@ -325,9 +325,9 @@ class UpdateForm extends PureComponent {
 }
 
 /* eslint react/no-multi-comp:0 */
-@connect(({ user, loading }) => ({
-  user,
-  loading: loading.models.user,
+@connect(({ systemdict, loading }) => ({
+  systemdict,
+  loading: loading.models.systemdict,
 }))
 @Form.create()
 export default class TableList extends PureComponent {
@@ -343,7 +343,7 @@ export default class TableList extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'user/fetch',
+      type: 'systemdict/fetch',
     });
   }
 
@@ -442,7 +442,7 @@ export default class TableList extends PureComponent {
     }
 
     dispatch({
-      type: 'user/fetch',
+      type: 'systemdict/fetch',
       payload: params,
     });
   };
@@ -454,7 +454,7 @@ export default class TableList extends PureComponent {
       formValues: {},
     });
     dispatch({
-      type: 'user/fetch',
+      type: 'systemdict/fetch',
       payload: {},
     });
   };
@@ -473,7 +473,7 @@ export default class TableList extends PureComponent {
     switch (e.key) {
       case 'remove':
         dispatch({
-          type: 'user/remove',
+          type: 'systemdict/remove',
           payload: {
             key: selectedRows.map(row => row.key),
           },
@@ -513,7 +513,7 @@ export default class TableList extends PureComponent {
       });
 
       dispatch({
-        type: 'user/fetch',
+        type: 'systemdict/fetch',
         payload: values,
       });
     });
@@ -534,7 +534,7 @@ export default class TableList extends PureComponent {
 
   handleAdd = fields => {
     this.props.dispatch({
-      type: 'user/add',
+      type: 'systemdict/add',
       payload: {
         desc: fields.desc,
       },
@@ -546,7 +546,7 @@ export default class TableList extends PureComponent {
 
   handleUpdate = fields => {
     this.props.dispatch({
-      type: 'user/update',
+      type: 'systemdict/update',
       payload: {
         name: fields.name,
         desc: fields.desc,
@@ -649,10 +649,9 @@ export default class TableList extends PureComponent {
 
   render() {
     const {
-      user: { data },
+      systemdict: { data },
       loading,
     } = this.props;
-
     const { selectedRows, modalVisible, updateModalVisible, stepFormValues } = this.state;
     const menu = (
       <Menu onClick={this.handleMenuClick} selectedKeys={[]}>

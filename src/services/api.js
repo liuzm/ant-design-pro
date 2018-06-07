@@ -164,7 +164,12 @@ export async function updateUser(params) {
   });
 }
 
-export async function menuList(params) {
+/**
+ *
+ * @param params
+ * @returns {Promise<Object>}
+ */
+export async function MenuList(params) {
   return request(`/api/v1/menus?${stringify(params)}`);
 }
 
@@ -190,6 +195,124 @@ export async function addMenu(params) {
 
 export async function updateMenu(params) {
   return request('/api/v1/menus', {
+    method: 'POST',
+    body: {
+      ...params,
+      method: 'update',
+    },
+  });
+}
+
+/**
+ *
+ * @param params
+ * @returns {Promise<Object>}
+ */
+export async function DepartList(params) {
+  return request(`/api/v1/menus?${stringify(params)}`);
+}
+
+export async function removeDepart(params) {
+  return request('/api/v1/menus', {
+    method: 'POST',
+    body: {
+      ...params,
+      method: 'delete',
+    },
+  });
+}
+
+export async function addDepart(params) {
+  return request('/api/v1/menus', {
+    method: 'POST',
+    body: {
+      ...params,
+      method: 'post',
+    },
+  });
+}
+
+export async function updateDepart(params) {
+  return request('/api/v1/menus', {
+    method: 'POST',
+    body: {
+      ...params,
+      method: 'update',
+    },
+  });
+}
+
+
+/**
+ *
+ * @param params
+ * @returns {Promise<Object>}
+ */
+export async function RoleList(params) {
+  return request(`/api/v1/roles?${stringify(params)}`);
+}
+
+export async function removeRole(params) {
+  return request('/api/v1/users', {
+    method: 'POST',
+    body: {
+      ...params,
+      method: 'delete',
+    },
+  });
+}
+
+export async function addRole(params) {
+  return request('/api/v1/users', {
+    method: 'POST',
+    body: {
+      ...params,
+      method: 'post',
+    },
+  });
+}
+
+export async function updateRole(params) {
+  return request('/api/v1/users', {
+    method: 'POST',
+    body: {
+      ...params,
+      method: 'update',
+    },
+  });
+}
+
+/**
+ *
+ * @param params
+ * @returns {Promise<Object>}
+ */
+export async function DictList(params) {
+  return request(`/api/v1/users?${stringify(params)}`);
+}
+
+export async function removeDict(params) {
+  return request('/api/v1/users', {
+    method: 'POST',
+    body: {
+      ...params,
+      method: 'delete',
+    },
+  });
+}
+
+export async function addDict(params) {
+  return request('/api/v1/users', {
+    method: 'POST',
+    body: {
+      ...params,
+      method: 'post',
+    },
+  });
+}
+
+export async function updateDict(params) {
+  return request('/api/v1/users', {
     method: 'POST',
     body: {
       ...params,

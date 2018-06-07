@@ -25,7 +25,6 @@ class DynamicCascader extends React.Component {
       request(self.props.url, {
         method: 'GET',
       }).then(function(data) {
-        console.log(data);
         self.initData(data.result);
       });
     }
@@ -100,7 +99,7 @@ class DynamicCascader extends React.Component {
   }
 
   render() {
-    let fValue = this.formatValue(this.props.value);
+    let fValue = this.formatValue(this.props.cvalue);
 
     return (
       <Cascader
@@ -110,7 +109,7 @@ class DynamicCascader extends React.Component {
         size={this.props.size}
         disabled={this.props.disabled}
         getPopupContainer={this.props.getPopupContainer}
-        onChange={value => this.onPropsChange(value)}
+        onChange={cvalue => this.onPropsChange(cvalue)}
         style={{ width: this.props.width || '100%' }}
       />
     );
@@ -125,7 +124,7 @@ DynamicCascader.propTypes = {
   expandTrigger: PropTypes.string,
   placeholder: PropTypes.string,
   size: PropTypes.string,
-  value: PropTypes.string,
+  cvalue: PropTypes.string,
   getPopupContainer: PropTypes.func,
 };
 

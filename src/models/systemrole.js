@@ -1,26 +1,26 @@
-import { MenuList, removeMenu, addMenu, updateMenu } from '../services/api'
+import { addRole, removeRole, RoleList, updateRole } from '../services/api'
 
 export default {
 
-  namespace: 'systemmenu',
+  namespace: 'systemrole',
 
   state: {
-    data: {
-      list: [],
+    result: {
+      data: [],
       pagination: {},
     },
   },
 
   effects: {
     * fetch ({payload}, {call, put}) {
-      const response = yield call(MenuList, payload)
+      const response = yield call(RoleList, payload)
       yield put({
         type: 'save',
         payload: response,
       })
     },
     * add ({payload, callback}, {call, put}) {
-      const response = yield call(addMenu, payload)
+      const response = yield call(addRole, payload)
       yield put({
         type: 'save',
         payload: response,
@@ -28,7 +28,7 @@ export default {
       if (callback) callback()
     },
     * remove ({payload, callback}, {call, put}) {
-      const response = yield call(removeMenu, payload)
+      const response = yield call(removeRole, payload)
       yield put({
         type: 'save',
         payload: response,
@@ -36,7 +36,7 @@ export default {
       if (callback) callback()
     },
     * update ({payload, callback}, {call, put}) {
-      const response = yield call(updateMenu, payload)
+      const response = yield call(updateRole, payload)
       yield put({
         type: 'save',
         payload: response,
@@ -49,7 +49,7 @@ export default {
     save (state, action) {
       return {
         ...state,
-        data: action.payload,
+        result: action.payload,
       }
     },
   },
