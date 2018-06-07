@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { Select, message, List, Switch, Divider, Icon } from 'antd';
-import DrawerMenu from 'rc-drawer-menu';
+import DrawerMenu from 'rc-drawer';
 import { connect } from 'dva';
 import styles from './index.less';
 import ThemeColor from './ThemeColor';
@@ -41,13 +41,13 @@ class SettingDarwer extends PureComponent {
             onSelect={value => this.changeSetting('grid', value)}
             style={{ width: 80 }}
           >
-            <Select.Option value="Wide">Wide</Select.Option>
-            <Select.Option value="Fluid">Fluid</Select.Option>
+            <Select.Option value="Wide">定宽</Select.Option>
+            <Select.Option value="Fluid">流式</Select.Option>
           </Select>,
         ],
       },
       {
-        title: 'Fixed Header',
+        title: '固定 Header',
         action: [
           <Switch
             size="small"
@@ -58,6 +58,7 @@ class SettingDarwer extends PureComponent {
       },
       {
         title: '下滑时隐藏 Header',
+        hide: fixedHeader,
         action: [
           <Switch
             size="small"
@@ -67,7 +68,7 @@ class SettingDarwer extends PureComponent {
         ],
       },
       {
-        title: 'Fix Siderbar',
+        title: '固定 Siderbar',
         action: [
           <Switch
             size="small"
@@ -76,7 +77,9 @@ class SettingDarwer extends PureComponent {
           />,
         ],
       },
-    ];
+    ].filter(item => {
+      return !item.hide;
+    });
   };
   changeSetting = (key, value) => {
     const nextState = { ...this.props.setting };
@@ -86,6 +89,11 @@ class SettingDarwer extends PureComponent {
         nextState.grid = 'Wide';
       } else {
         nextState.grid = 'Fluid';
+      }
+    }
+    if (key === 'fixedHeader') {
+      if (value) {
+        nextState.autoHideHeader = false;
       }
     }
     if (key === 'colorWeak') {
@@ -129,6 +137,7 @@ class SettingDarwer extends PureComponent {
           parent={null}
           level={null}
           open={collapse}
+          mask={false}
           onHandleClick={this.togglerContent}
           handleChild={
             !collapse ? (
@@ -203,7 +212,7 @@ class SettingDarwer extends PureComponent {
 
             <Divider />
 
-            <Body title="导航设置 ">
+            <Body title="其他设置 ">
               <List.Item
                 actions={[
                   <Select
