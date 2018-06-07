@@ -9,6 +9,7 @@ import { format, delay } from 'roadhog-api-doc';
 import { getProvince, getCity, getArea } from './mock/geographic/geographic';
 import { getUsers, postUser } from './mock/user';
 import { getMenus, postMenu } from './mock/menu';
+import { getDictByKey, getDicts, postDict, getDeptByKey } from './mock/dict';
 
 // 是否禁用代理
 const noProxy = process.env.NO_PROXY === 'true';
@@ -127,6 +128,19 @@ const proxy = {
     },
     $body: postMenu,
   },
+  'GET /api/v1/dicts': getDicts,
+  'POST /api/v1/dicts': {
+    $params: {
+      pageSize: {
+        desc: '分页',
+        exp: 2,
+      },
+    },
+    $body: postDict,
+  },
+  'GET /api/v1/getdic/:key': getDictByKey,
+  'GET /api/v1/getDeptOption': getDeptByKey,
+
   'POST /api/forms': (req, res) => {
     res.send({ message: 'Ok' });
   },

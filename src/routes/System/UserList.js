@@ -1,26 +1,29 @@
-import React, { PureComponent, Fragment } from 'react';
+import React, { Fragment, PureComponent } from 'react';
 import { connect } from 'dva';
 import moment from 'moment';
 import {
-  Row,
-  Col,
-  Card,
-  Form,
-  Input,
-  Select,
-  Icon,
-  Button,
-  Dropdown,
-  Menu,
-  DatePicker,
-  Modal,
-  message,
   Badge,
+  Button,
+  Card,
+  Col,
+  DatePicker,
   Divider,
-  Steps,
+  Dropdown,
+  Form,
+  Icon,
+  Input,
+  Menu,
+  message,
+  Modal,
   Radio,
+  Row,
+  Select,
+  Steps,
 } from 'antd';
 import StandardTable from 'components/StandardTable';
+import DynamicSelector from 'components/DynamicSelect';
+import DynamicCascader from 'components/DynamicCascader';
+import config from '../../utils/config';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 
 import styles from './UserList.less';
@@ -38,55 +41,93 @@ const getValue = obj =>
 const statusMap = ['default', 'processing', 'success', 'error'];
 const status = ['关闭', '运行中', '已上线', '异常'];
 
-const CreateForm = Form.create()(props => {
-  const { modalVisible, form, handleAdd, handleModalVisible } = props;
-  const okHandle = () => {
-    form.validateFields((err, fieldsValue) => {
+@Form.create()
+class CreateForm extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      value: '',
+    };
+  }
+
+  okHandle = () => {
+    this.props.form.validateFields((err, fieldsValue) => {
       if (err) return;
-      form.resetFields();
-      handleAdd(fieldsValue);
+      this.props.form.resetFields();
+      this.props.handleAdd(fieldsValue);
     });
   };
-  return (
-    <Modal
-      destroyOnClose
-      title="新建用户"
-      visible={modalVisible}
-      onOk={okHandle}
-      onCancel={() => handleModalVisible()}
-    >
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="用户名">
-        {form.getFieldDecorator('desc', {
-          rules: [{ required: true, message: '请输入至少五个字符的规则描述！', min: 5 }],
-        })(<Input placeholder="请输入" />)}
-      </FormItem>
 
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="手机号">
-        {form.getFieldDecorator('phone', {
-          rules: [{ required: true, message: '请输入手机号！', min: 13 }],
-        })(<Input placeholder="请输入" />)}
-      </FormItem>
+  getContainer = el => {
+    return el;
+  };
 
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="密码">
-        {form.getFieldDecorator('password', {
-          rules: [{ required: true, message: '请输入密码！', min: 6 }],
-        })(<Input placeholder="请输入" />)}
-      </FormItem>
+  onValueChange(value) {
+    this.setState({
+      value: value,
+    });
+  }
 
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="部门">
-        {form.getFieldDecorator('department', {
-          rules: [{ required: true, message: '请选择部门！', min: 6 }],
-        })(<Input placeholder="请输入" />)}
-      </FormItem>
+  render() {
+    const { modalVisible, form, handleModalVisible } = this.props;
 
-      <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="角色">
-        {form.getFieldDecorator('role', {
-          rules: [{ required: true, message: '请选择角色！', min: 6 }],
-        })(<Input placeholder="请输入" />)}
-      </FormItem>
-    </Modal>
-  );
-});
+    return (
+      <Modal
+        destroyOnClose
+        title="新建用户"
+        visible={modalVisible}
+        onOk={okHandle}
+        onCancel={() => handleModalVisible()}
+      >
+        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="用户名">
+          {form.getFieldDecorator('desc', {
+            rules: [{ required: true, message: '请输入至少五个字符的规则描述！', min: 5 }],
+          })(<Input placeholder="请输入" />)}
+        </FormItem>
+
+        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="手机号">
+          {form.getFieldDecorator('phone', {
+            rules: [{ required: true, message: '请输入手机号！', min: 11 }],
+          })(<Input placeholder="请输入" />)}
+        </FormItem>
+
+        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="密码">
+          {form.getFieldDecorator('password', {
+            rules: [{ required: true, message: '请输入密码！', min: 6 }],
+          })(<Input placeholder="请输入" />)}
+        </FormItem>
+
+        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="部门">
+          {form.getFieldDecorator('department', {
+            rules: [{ required: true, message: '请选择部门！' }],
+          })(
+            <DynamicCascader
+              url={config.api.deptsAll}
+              expandTrigger="hover"
+              onChange={value => this.onValueChange(value)}
+              value={this.state.value}
+              getPopupContainer={this.getContainer}
+            />
+          )}
+        </FormItem>
+
+        <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="角色">
+          {form.getFieldDecorator('role', {
+            rules: [{ required: true, message: '请选择角色！' }],
+          })(
+            <DynamicSelector
+              dicKey={config.selectKey.role}
+              data={config.selectKey.roleData || []}
+              onChange={value => this.onValueChange(value)}
+              selectedValue={this.state.value}
+              getPopupContainer={this.getContainer}
+            />
+          )}
+        </FormItem>
+      </Modal>
+    );
+  }
+}
 
 @Form.create()
 class UpdateForm extends PureComponent {
@@ -112,6 +153,7 @@ class UpdateForm extends PureComponent {
       wrapperCol: { span: 13 },
     };
   }
+
   handleNext = currentStep => {
     const { form, handleUpdate } = this.props;
     form.validateFields((err, fieldsValue) => {
@@ -255,6 +297,7 @@ class UpdateForm extends PureComponent {
       </Button>,
     ];
   };
+
   render() {
     const { updateModalVisible, handleUpdateModalVisible } = this.props;
     const { currentStep, formVals } = this.state;
