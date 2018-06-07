@@ -6,10 +6,10 @@ import request from '../../utils/request';
 import { Select } from 'antd';
 
 const formatOption = options => {
-  if (!options || options.length == 0) return [];
+  if (!options || options.length === 0) return [];
 
   return options.map(o => {
-    if (typeof o['disabled'] == 'string') o['disabled'] = o['disabled'] === 'true';
+    if (typeof o['disabled'] === 'string') o['disabled'] = o['disabled'] === 'true';
     return o;
   });
 };
