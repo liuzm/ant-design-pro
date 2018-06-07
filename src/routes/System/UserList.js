@@ -76,7 +76,7 @@ class CreateForm extends PureComponent {
         destroyOnClose
         title="新建用户"
         visible={modalVisible}
-        onOk={okHandle}
+        onOk={this.okHandle}
         onCancel={() => handleModalVisible()}
       >
         <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="用户名">
