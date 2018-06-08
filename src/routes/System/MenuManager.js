@@ -80,7 +80,7 @@ export default class MenuComponent extends PureComponent {
       },
     });
     this.props.dispatch({
-      type: 'menu/fetch',
+      type: 'systemmenu/fetch',
       payload: values,
     });
   };

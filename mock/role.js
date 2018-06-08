@@ -15,13 +15,13 @@ const dataSource = [
     roleName: '员工',
     roleCode: 'staff',
     roleDesc: '系统管理员(操作员)',
-    departId: '10',
+    departId: '15',
     department: '研发部',
     createTime: new Date(),
     updateTime: new Date(),
     delFlag: 0,
   },
-]
+];
 
 const database = {
   code: '200',
@@ -34,8 +34,8 @@ const database = {
       current: 1,
     },
   },
-}
+};
 
-export function getRoleList (req, res) {
-  return res.json(database)
+export function getRoleList(req, res) {
+  return res.json(database);
 }

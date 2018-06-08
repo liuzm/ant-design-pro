@@ -31,6 +31,7 @@ class DynamicCascader extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    console.log(nextProps.data !== this.props.data);
     if (nextProps.data !== this.props.data) {
       this.initData(nextProps.data);
     }
@@ -89,6 +90,7 @@ class DynamicCascader extends React.Component {
     let result = [];
 
     let hash = this.state.itemHash;
+
     let curNode = hash[value];
     while (curNode) {
       result.unshift(curNode['value']);
@@ -100,7 +102,6 @@ class DynamicCascader extends React.Component {
 
   render() {
     let fValue = this.formatValue(this.props.cvalue);
-
     return (
       <Cascader
         options={this.state.options}

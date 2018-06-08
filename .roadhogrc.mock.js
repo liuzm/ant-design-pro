@@ -223,4 +223,6 @@ const proxy = {
   'GET /api/captcha': getFakeCaptcha,
 };
 
-export default (noProxy ? {} : delay(proxy, 1000));
+export default (noProxy
+  ? { 'GET /api/(.*)': 'http://192.168.1.99:8088/api/' }
+  : delay(proxy, 1000));
