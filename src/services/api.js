@@ -242,14 +242,13 @@ export async function updateDepart(params) {
   });
 }
 
-
 /**
  *
  * @param params
  * @returns {Promise<Object>}
  */
 export async function RoleList(params) {
-  return request(`/api/v1/roles?${stringify(params)}`);
+  return request(`/api/sysRole/page?${stringify(params)}`);
 }
 
 export async function removeRole(params) {
