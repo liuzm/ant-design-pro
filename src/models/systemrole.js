@@ -47,7 +47,6 @@ export default {
 
   reducers: {
     save(state, action) {
-      console.log(action.payload);
       return {
         ...state,
         result: action.payload,

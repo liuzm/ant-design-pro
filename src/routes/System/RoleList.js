@@ -21,9 +21,6 @@ const getValue = obj =>
 class CreateForm extends PureComponent {
   constructor(props) {
     super(props);
-    this.state = {
-      department: '',
-    };
   }
 
   okHandle = () => {
@@ -38,9 +35,9 @@ class CreateForm extends PureComponent {
     return el;
   };
 
-  onValueChange(value) {
+  onValueChange(cvalue) {
     this.setState({
-      value: value,
+      cvalue: cvalue,
     });
   }
 
@@ -74,14 +71,18 @@ class CreateForm extends PureComponent {
         </FormItem>
 
         <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="角色所属部门">
-          {form.getFieldDecorator('department', {
+          {form.getFieldDecorator('departId', {
             rules: [{ required: true, message: '请选择部门！' }],
+            initialValue: form.departId,
+            valuePropName: 'cvalue',
           })(
             <DynamicCascader
               url={config.api.deptsAll}
               expandTrigger="hover"
               onChange={value => this.onValueChange(value)}
-              cvalue={this.state.department}
+              ivalue="deptId"
+              label="name"
+              parentValue="parentId"
               getPopupContainer={this.getContainer}
             />
           )}
@@ -109,7 +110,7 @@ class UpdateForm extends PureComponent {
 
   onValueChange(value) {
     this.setState({
-      value: value,
+      cvalue: value,
     });
   }
 
@@ -306,12 +307,17 @@ export default class TableList extends PureComponent {
     this.props.dispatch({
       type: 'systemrole/add',
       payload: {
-        desc: fields.desc,
+        ...fields,
       },
     });
 
     message.success('添加成功');
     this.handleModalVisible();
+
+    dispatch({
+      type: 'systemrole/fetch',
+      payload: params,
+    });
   };
 
   handleUpdate = fields => {

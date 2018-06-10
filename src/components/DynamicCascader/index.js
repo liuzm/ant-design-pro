@@ -19,19 +19,19 @@ class DynamicCascader extends React.Component {
 
   componentDidMount() {
     let self = this;
+
     if (self.props.data.length > 0) {
       self.initData(this.props.data);
     } else {
       request(self.props.url, {
         method: 'GET',
       }).then(function(data) {
-        self.initData(data.result);
+        self.initData(data.data);
       });
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps.data !== this.props.data);
     if (nextProps.data !== this.props.data) {
       this.initData(nextProps.data);
     }
@@ -43,15 +43,16 @@ class DynamicCascader extends React.Component {
     let folderNodes = [];
     let options = [];
     let hash = {};
+
     data.forEach(item => {
-      hash[item['value']] = item;
+      hash[item[this.props.ivalue]] = item;
       if (item.folder + '' == 'true') {
         folderNodes.push(item);
       }
     });
 
     data.forEach(item => {
-      let hashVP = hash[item['parentValue']];
+      let hashVP = hash[item[this.props.parentValue]];
       if (hashVP) {
         !hashVP['children'] && (hashVP['children'] = []);
         hashVP['children'].push(item);
@@ -65,16 +66,16 @@ class DynamicCascader extends React.Component {
       let curNode = folderNodes[i];
 
       while (curNode != null && typeof curNode != 'undefined') {
-        let value = curNode['value'];
+        let value = curNode[this.props.ivalue];
         if (hash[value]['children'] && hash[value]['children'].length > 0) break;
 
-        let pValue = curNode['parentValue'];
+        let pValue = curNode[this.props.parentValue];
         let pNode = hash[pValue];
         let pArr = pNode ? pNode['children'] : options;
 
-        let index = pArr.findIndex(item => item['value'] === value);
+        let index = pArr.findIndex(item => item[this.props.ivalue] === value);
         if (index == -1) break;
-
+i
         pArr.splice(index, 1);
         curNode = hash[pValue];
       }
@@ -93,8 +94,8 @@ class DynamicCascader extends React.Component {
 
     let curNode = hash[value];
     while (curNode) {
-      result.unshift(curNode['value']);
-      let pValue = curNode['parentValue'];
+      result.unshift(curNode[this.props.ivalue]);
+      let pValue = curNode[this.props.parentValue];
       curNode = hash[pValue];
     }
     return result;
@@ -111,6 +112,7 @@ class DynamicCascader extends React.Component {
         disabled={this.props.disabled}
         getPopupContainer={this.props.getPopupContainer}
         onChange={cvalue => this.onPropsChange(cvalue)}
+        filedNames={{ label:this.props.label, value: this.props.ivalue, children: 'children' }}
         style={{ width: this.props.width || '100%' }}
       />
     );
@@ -125,8 +127,11 @@ DynamicCascader.propTypes = {
   expandTrigger: PropTypes.string,
   placeholder: PropTypes.string,
   size: PropTypes.string,
-  cvalue: PropTypes.string,
+  cvalue: PropTypes.number,
   getPopupContainer: PropTypes.func,
+  ivalue: PropTypes.string,
+  label: PropTypes.string,
+  parentValue: PropTypes.string,
 };
 
 DynamicCascader.defaultProps = {
@@ -134,6 +139,9 @@ DynamicCascader.defaultProps = {
   expandTrigger: 'click',
   size: 'default',
   disabled: false,
+  ivalue: "value",
+  label: "label",
+  parentValue: "parentValue",
   getPopupContainer: () => document.body,
 };
 

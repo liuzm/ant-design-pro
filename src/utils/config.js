@@ -1,5 +1,6 @@
 const APIV1 = '/api/v1';
 const APIV2 = '/api/v2';
+const API= 'api';
 
 export default {
   name: 'centipede',
@@ -31,7 +32,7 @@ export default {
     v2test: `${APIV2}/test`,
 
     menus: `${APIV1}/menus`,
-    deptsAll: `${APIV1}/getDeptOption`,
+    deptsAll: `${API}/sysDept/all`,
     getDic: `${APIV1}/getdic/`,
     upload: `/file/upload`,
     permissions: `${APIV1}/permissions`,

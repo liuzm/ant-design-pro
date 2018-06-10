@@ -224,5 +224,9 @@ const proxy = {
 };
 
 export default (noProxy
-  ? { 'GET /api/(.*)': 'http://116.62.142.239:8088/api/' }
+  ? {
+   'GET /api/(.*)': 'http://127.0.0.1:8088/api/',
+   'POST /api/(.*)': 'http://127.0.0.1:8088/api/',
+
+  }
   : delay(proxy, 1000));

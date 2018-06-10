@@ -262,11 +262,10 @@ export async function removeRole(params) {
 }
 
 export async function addRole(params) {
-  return request('/api/v1/users', {
+  return request('/api/sysRole/', {
     method: 'POST',
     body: {
       ...params,
-      method: 'post',
     },
   });
 }
