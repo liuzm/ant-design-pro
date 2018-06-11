@@ -6,7 +6,7 @@ import { getProfileBasicData } from './mock/profile';
 import { getProfileAdvancedData } from './mock/profile';
 import { getNotices } from './mock/notices';
 import { format, delay } from 'roadhog-api-doc';
-import { getProvince, getCity, getArea } from './mock/geographic/geographic';
+import { getProvince, getCity } from './mock/geographic';
 import { getUsers, postUser } from './mock/user';
 import { getMenus, postMenu } from './mock/menu';
 import { getRoleList } from './mock/role';
@@ -225,8 +225,7 @@ const proxy = {
 
 export default (noProxy
   ? {
-   'GET /api/(.*)': 'http://127.0.0.1:8088/api/',
-   'POST /api/(.*)': 'http://127.0.0.1:8088/api/',
-
-  }
+      'GET /api/(.*)': 'http://116.62.142.239:8088/api/',
+      'POST /api/(.*)': 'http://116.62.142.239:8088/api/',
+    }
   : delay(proxy, 1000));
