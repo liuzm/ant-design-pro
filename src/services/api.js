@@ -209,35 +209,37 @@ export async function updateMenu(params) {
  * @returns {Promise<Object>}
  */
 export async function DepartList(params) {
-  return request(`/api/v1/menus?${stringify(params)}`);
+  return request('/api/sysDept/all', {
+    method: 'GET',
+    body: {
+      ...params,
+    },
+  });
 }
 
 export async function removeDepart(params) {
-  return request('/api/v1/menus', {
-    method: 'POST',
+  return request('/api/sysDept', {
+    method: 'DELETE',
     body: {
       ...params,
-      method: 'delete',
     },
   });
 }
 
 export async function addDepart(params) {
-  return request('/api/v1/menus', {
+  return request('/api/sysDept', {
     method: 'POST',
     body: {
       ...params,
-      method: 'post',
     },
   });
 }
 
 export async function updateDepart(params) {
-  return request('/api/v1/menus', {
-    method: 'POST',
+  return request('/api/sysDept', {
+    method: 'PUT',
     body: {
       ...params,
-      method: 'update',
     },
   });
 }
@@ -252,11 +254,10 @@ export async function RoleList(params) {
 }
 
 export async function removeRole(params) {
-  return request('/api/v1/users', {
-    method: 'POST',
+  return request('/api/sysRole', {
+    method: 'DELETE',
     body: {
       ...params,
-      method: 'delete',
     },
   });
 }
@@ -271,11 +272,10 @@ export async function addRole(params) {
 }
 
 export async function updateRole(params) {
-  return request('/api/v1/users', {
-    method: 'POST',
+  return request('/api/sysRole', {
+    method: 'PUT',
     body: {
       ...params,
-      method: 'update',
     },
   });
 }

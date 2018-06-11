@@ -1,56 +1,56 @@
-import { addDepart, DepartList, removeDepart, updateDepart } from '../services/api'
+import { addDepart, DepartList, removeDepart, updateDepart } from '../services/api';
 
 export default {
-
   namespace: 'systemdepart',
 
   state: {
-    data: {
-      list: [],
-      pagination: {},
+    result: {
+      code: '',
+      data: {},
+      msg: '',
     },
   },
 
   effects: {
-    * fetch ({payload}, {call, put}) {
-      const response = yield call(DepartList, payload)
+    *fetch({ payload }, { call, put }) {
+      const response = yield call(DepartList, payload);
       yield put({
         type: 'save',
         payload: response,
-      })
+      });
     },
-    * add ({payload, callback}, {call, put}) {
-      const response = yield call(addDepart, payload)
+    *add({ payload, callback }, { call, put }) {
+      const response = yield call(addDepart, payload);
       yield put({
         type: 'save',
         payload: response,
-      })
-      if (callback) callback()
+      });
+      if (callback) callback();
     },
-    * remove ({payload, callback}, {call, put}) {
-      const response = yield call(removeDepart, payload)
+    *remove({ payload, callback }, { call, put }) {
+      const response = yield call(removeDepart, payload);
       yield put({
         type: 'save',
         payload: response,
-      })
-      if (callback) callback()
+      });
+      if (callback) callback();
     },
-    * update ({payload, callback}, {call, put}) {
-      const response = yield call(updateDepart, payload)
+    *update({ payload, callback }, { call, put }) {
+      const response = yield call(updateDepart, payload);
       yield put({
         type: 'save',
         payload: response,
-      })
-      if (callback) callback()
+      });
+      if (callback) callback();
     },
   },
 
   reducers: {
-    save (state, action) {
+    save(state, action) {
       return {
         ...state,
-        data: action.payload,
-      }
+        result: action.payload,
+      };
     },
   },
-}
+};

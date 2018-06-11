@@ -148,7 +148,7 @@ class UpdateForm extends PureComponent {
         </FormItem>
 
         <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="角色所属部门">
-          {form.getFieldDecorator('department', {
+          {form.getFieldDecorator('departId', {
             rules: [{ required: true, message: '请选择部门！' }],
             initialValue: stepFormValues.departId,
             valuePropName: 'cvalue',
@@ -212,7 +212,6 @@ export default class TableList extends PureComponent {
       sorter: true,
       align: 'right',
       // mark to display a total number
-      needTotal: true,
     },
     {
       title: '创建时间',

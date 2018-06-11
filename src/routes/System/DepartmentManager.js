@@ -89,7 +89,7 @@ export default class MenuComponent extends PureComponent {
     e.stopPropagation();
 
     let menu1 = {};
-    this.props.systemmenu.data.list.forEach(menu => {
+    this.props.systemmenu.result.data.forEach(menu => {
       if (menu.id === this.state.id) {
         menu1 = menu;
       }
@@ -101,8 +101,7 @@ export default class MenuComponent extends PureComponent {
         showEditStatus: value,
       });
 
-      console.log(this.state.showEditStatus);
-      this.props.systemmenu.data.list.forEach(menu => {
+      this.props.systemmenu.result.data.forEach(menu => {
         if (menu.id === menu1.parentId) {
           parentName = menu.menuName;
         }
@@ -133,51 +132,53 @@ export default class MenuComponent extends PureComponent {
     });
   };
 
-  info = menu => {
+  info = depart => {
     let parentName = '';
-    this.props.systemmenu.data.list.forEach(menu1 => {
-      if (menu1.id === menu.parentId) {
-        parentName = menu1.menuName;
+    this.props.systemdepart.result.data.forEach(menu1 => {
+      if (menu1.departId === depart.parentId) {
+        parentName = menu1.name;
       }
     });
     this.setState({
       showEditStatus: 1,
-      id: menu.id,
-      menu: menu,
+      id: depart.departId,
+      depart: depart,
     });
     this.props.form.setFieldsValue({
-      menuName: menu.menuName,
-      permissionCode: menu.permissionCode,
-      menuType: menu.menuType,
-      menuUrl: menu.menuUrl,
-      menuImg: menu.menuImg,
+      name: depart.name,
+      orderNum: depart.orderNum,
       parentName: parentName,
     });
   };
 
-  recursion(MenuList, i) {
-    if (MenuList.size <= 0) {
+  recursion(DepartList, i) {
+    if (JSON.stringify(DepartList) === '{}') {
       return;
     }
     let arr = [];
     let j = 0;
-    MenuList.forEach(menu => {
-      if (menu.parentId === i) {
+    DepartList.forEach(depart => {
+      if (depart.parentId === i) {
         arr[j] = (
           <TreeNode
             title={
-              <div style={style} onClick={() => this.info(menu)}>
+              <div style={style} onClick={() => this.info(depart)}>
                 <Icon
-                  type={menu.menuType === 2 ? 'file' : menu.menuType === 3 ? 'tag-o' : 'folder'}
-                />&nbsp;&nbsp;{menu.menuName}&nbsp;&nbsp;
+                  type={
+                    depart.orderNum === null ? 'file' : depart.orderNum === 3 ? 'tag-o' : 'folder'
+                  }
+                />&nbsp;&nbsp;{depart.name}&nbsp;&nbsp;
                 <Dropdown trigger={['click']} overlay={this.Caidan} placement="bottomLeft">
-                  <Icon onClick={this.handleButtonClick.bind(this, menu.id)} type="caret-down" />
+                  <Icon
+                    onClick={this.handleButtonClick.bind(this, depart.deptId)}
+                    type="caret-down"
+                  />
                 </Dropdown>
               </div>
             }
-            key={menu.id}
+            key={depart.deptId}
           >
-            {this.recursion(MenuList, menu.id)}
+            {this.recursion(DepartList, depart.deptId)}
           </TreeNode>
         );
         j = j + 1;
@@ -250,11 +251,11 @@ export default class MenuComponent extends PureComponent {
   render() {
     const { getFieldDecorator } = this.props.form;
     const {
-      systemdepart: { data },
+      systemdepart: { result },
     } = this.props;
 
     return (
-      <PageHeaderLayout title={'菜单管理'}>
+      <PageHeaderLayout title={'部门管理'}>
         <Row>
           <Col span={6}>
             <Card>
@@ -262,7 +263,7 @@ export default class MenuComponent extends PureComponent {
                 <TreeNode
                   title={
                     <div style={style}>
-                      <Icon type="folder" />&nbsp;&nbsp;菜单结构&nbsp;&nbsp;
+                      <Icon type="folder" />&nbsp;&nbsp;部门组织结构&nbsp;&nbsp;
                       <Dropdown trigger={['click']} overlay={this.CaidanTwo} placement="bottomLeft">
                         <Icon onClick={this.handleButtonClick.bind(this, 3)} type="caret-down" />
                       </Dropdown>
@@ -270,7 +271,7 @@ export default class MenuComponent extends PureComponent {
                   }
                   key="0-0"
                 >
-                  {this.recursion(data.list, -1)}
+                  {this.recursion(result.data, 0)}
                 </TreeNode>
               </Tree>
             </Card>
@@ -284,10 +285,10 @@ export default class MenuComponent extends PureComponent {
                 }}
               >
                 {this.state.showEditStatus === 1
-                  ? '菜单详情'
+                  ? '部门详情'
                   : this.state.showEditStatus === 2
-                    ? '编辑菜单'
-                    : '添加菜单'}
+                    ? '编辑部门'
+                    : '添加部门'}
               </h2>
               <hr
                 style={{
@@ -297,67 +298,29 @@ export default class MenuComponent extends PureComponent {
                 }}
               />
               <Form style={{ marginTop: 20 }} layout="horizontal">
-                <FormItem label="菜单名称" labelCol={{ span: 5 }} wrapperCol={{ span: 15 }}>
-                  {getFieldDecorator('menuName', {
+                <FormItem label="部门名称" labelCol={{ span: 5 }} wrapperCol={{ span: 15 }}>
+                  {getFieldDecorator('name', {
                     rules: [
                       {
                         required: true,
-                        message: '请输入菜单名称!',
+                        message: '请输入部门名称!',
                       },
                     ],
                   })(
                     <Input
                       disabled={this.state.showEditStatus === 1}
-                      placeholder="请输入菜单名称"
+                      placeholder="请输入部门名称"
                     />
                   )}
                 </FormItem>
-                <FormItem label="权限标识" labelCol={{ span: 5 }} wrapperCol={{ span: 15 }}>
-                  {getFieldDecorator('permissionCode', {
-                    rules: [
-                      {
-                        required: true,
-                        message: '请输入权限标识!',
-                      },
-                    ],
-                  })(
-                    <Input
-                      disabled={this.state.showEditStatus === 1}
-                      placeholder="请输入权限标识"
-                    />
-                  )}
-                </FormItem>
-                <FormItem label="菜单级别" labelCol={{ span: 5 }} wrapperCol={{ span: 15 }}>
-                  {getFieldDecorator('menuType', {
-                    rules: [
-                      {
-                        required: true,
-                        message: '请选择菜单级别!',
-                      },
-                    ],
-                  })(
-                    <RadioGroup disabled={this.state.showEditStatus === 1}>
-                      <Radio value={1}>目录</Radio>
-                      <Radio value={2}>页面</Radio>
-                      <Radio value={3}>按钮</Radio>
-                    </RadioGroup>
-                  )}
-                </FormItem>
-                <FormItem label="菜单地址" labelCol={{ span: 5 }} wrapperCol={{ span: 15 }}>
-                  {getFieldDecorator('menuUrl')(
-                    <Input
-                      disabled={this.state.showEditStatus === 1}
-                      placeholder="请输入菜单地址"
-                    />
-                  )}
-                </FormItem>
-                <FormItem label="图标" labelCol={{ span: 5 }} wrapperCol={{ span: 15 }}>
-                  {getFieldDecorator('menuImg')(
+
+                <FormItem label="排序" labelCol={{ span: 5 }} wrapperCol={{ span: 15 }}>
+                  {getFieldDecorator('orderNum')(
                     <Input disabled={this.state.showEditStatus === 1} />
                   )}
                 </FormItem>
                 <FormItem label="父级菜单" labelCol={{ span: 5 }} wrapperCol={{ span: 15 }}>
-                  {getFieldDecorator('parentName')(<Input disabled />)}
+                  {getFieldDecorator('parentId')(<Input disabled />)}
                 </FormItem>
                 {this.state.showEditStatus !== 1 && (
                   <FormItem>
