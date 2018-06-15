@@ -97,6 +97,7 @@ class UpdateForm extends PureComponent {
   constructor(props) {
     super(props);
   }
+
   okHandle = () => {
     this.props.form.validateFields((err, fieldsValue) => {
       if (err) return;
@@ -126,6 +127,12 @@ class UpdateForm extends PureComponent {
         onOk={this.okHandle}
         onCancel={() => handleUpdateModalVisible()}
       >
+        <FormItem style={{ display: 'none' }}>
+          {form.getFieldDecorator('roleId', {
+            initialValue: stepFormValues.roleId,
+          })(<Input placeholder="请输入" type="hidden" />)}
+        </FormItem>
+
         <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="角色名称">
           {form.getFieldDecorator('roleName', {
             rules: [{ required: true, message: '请输入至少五个字符的规则描述！', min: 2 }],
@@ -156,6 +163,9 @@ class UpdateForm extends PureComponent {
             <DynamicCascader
               url={config.api.deptsAll}
               expandTrigger="hover"
+              ivalue="deptId"
+              label="name"
+              parentValue="parentId"
               onChange={value => this.onValueChange(value)}
               getPopupContainer={this.getContainer}
             />
@@ -167,10 +177,7 @@ class UpdateForm extends PureComponent {
 }
 
 /* eslint react/no-multi-comp:0 */
-@connect(({ systemrole, loading }) => ({
-  systemrole,
-  loading: loading.models.systemrole,
-}))
+@connect(({ systemrole, loading }) => ({ systemrole, loading: loading.models.systemrole }))
 @Form.create()
 export default class TableList extends PureComponent {
   state = {
@@ -208,7 +215,7 @@ export default class TableList extends PureComponent {
     },
     {
       title: '部门',
-      dataIndex: 'department',
+      dataIndex: 'departmentName',
       sorter: true,
       align: 'right',
       // mark to display a total number
@@ -224,10 +231,6 @@ export default class TableList extends PureComponent {
       render: (text, record) => (
         <Fragment>
           <a onClick={() => this.handleUpdateModalVisible(true, record)}>编辑</a>
-          <Divider type="vertical" />
-          <a href="">重置密码</a>
-          <Divider type="vertical" />
-          <a href="">删除</a>
         </Fragment>
       ),
     },
@@ -260,21 +263,15 @@ export default class TableList extends PureComponent {
   };
 
   handleMenuClick = e => {
-    const { dispatch } = this.props;
     const { selectedRows } = this.state;
-
     if (!selectedRows) return;
+
     switch (e.key) {
       case 'remove':
-        dispatch({
+        this.props.dispatch({
           type: 'systemrole/remove',
           payload: {
-            key: selectedRows.map(row => row.key),
-          },
-          callback: () => {
-            this.setState({
-              selectedRows: [],
-            });
+            keys: selectedRows.map(row => row.roleId),
           },
         });
         break;
@@ -303,57 +300,61 @@ export default class TableList extends PureComponent {
   };
 
   handleAdd = fields => {
-    this.props.dispatch({
-      type: 'systemrole/add',
-      payload: {
-        ...fields,
-      },
-    });
+    this.props
+      .dispatch({
+        type: 'systemrole/add',
+        payload: {
+          ...fields,
+        },
+      })
+      .then(() => {
+        this.props.dispatch({
+          type: 'systemrole/fetch',
+        });
+      });
 
     message.success('添加成功');
     this.handleModalVisible();
-
-    dispatch({
-      type: 'systemrole/fetch',
-      payload: params,
-    });
   };
 
   handleUpdate = fields => {
-    this.props.dispatch({
-      type: 'systemrole/update',
-      payload: {
-        name: fields.name,
-        desc: fields.desc,
-        key: fields.key,
-      },
-    });
-
-    message.success('配置成功');
+    this.props
+      .dispatch({
+        type: 'systemrole/update',
+        payload: {
+          ...fields,
+        },
+      })
+      .then(() => {
+        this.props.dispatch({
+          type: 'systemrole/fetch',
+        });
+      });
+    message.success('编辑成功');
     this.handleUpdateModalVisible();
   };
 
   render() {
     const {
-      systemrole: { result },
       loading,
+      systemrole: { result },
     } = this.props;
     const { selectedRows, modalVisible, updateModalVisible, stepFormValues } = this.state;
     const menu = (
       <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
         <Menu.Item key="remove">删除</Menu.Item>
-        <Menu.Item key="approval">批量审批</Menu.Item>
       </Menu>
     );
-
     const parentMethods = {
       handleAdd: this.handleAdd,
       handleModalVisible: this.handleModalVisible,
     };
+
     const updateMethods = {
       handleUpdateModalVisible: this.handleUpdateModalVisible,
       handleUpdate: this.handleUpdate,
     };
+
     return (
       <PageHeaderLayout title="查询表格">
         <Card bordered={false}>

@@ -7,9 +7,10 @@ export default {
   state: {
     list: [],
     currentUser: {},
-    data: {
-      list: [],
-      pagination: {},
+    result: {
+      code: '',
+      data: {},
+      msg: '',
     },
   },
 
@@ -58,7 +59,7 @@ export default {
     save(state, action) {
       return {
         ...state,
-        data: action.payload,
+        result: action.payload,
       };
     },
     saveCurrentUser(state, action) {

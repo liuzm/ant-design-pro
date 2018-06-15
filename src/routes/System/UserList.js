@@ -39,6 +39,7 @@ const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
     .join(',');
+
 const statusMap = ['default', 'processing', 'success', 'error'];
 const status = ['关闭', '运行中', '已上线', '异常'];
 
@@ -46,9 +47,6 @@ const status = ['关闭', '运行中', '已上线', '异常'];
 class CreateForm extends PureComponent {
   constructor(props) {
     super(props);
-    this.state = {
-      value: '',
-    };
   }
 
   okHandle = () => {
@@ -99,14 +97,16 @@ class CreateForm extends PureComponent {
         </FormItem>
 
         <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 15 }} label="部门">
-          {form.getFieldDecorator('department', {
+          {form.getFieldDecorator('departid', {
             rules: [{ required: true, message: '请选择部门！' }],
           })(
             <DynamicCascader
               url={config.api.deptsAll}
               expandTrigger="hover"
+              ivalue="deptId"
+              label="name"
+              parentValue="parentId"
               onChange={value => this.onValueChange(value)}
-              cvalue={this.state.value}
               getPopupContainer={this.getContainer}
             />
           )}
@@ -120,7 +120,9 @@ class CreateForm extends PureComponent {
               dicKey={config.selectKey.role}
               data={config.selectKey.roleData || []}
               onChange={value => this.onValueChange(value)}
-              selectedValue={this.state.value}
+              ivalue="deptId"
+              label="name"
+              parentValue="parentId"
               getPopupContainer={this.getContainer}
             />
           )}
@@ -325,10 +327,7 @@ class UpdateForm extends PureComponent {
 }
 
 /* eslint react/no-multi-comp:0 */
-@connect(({ user, loading }) => ({
-  user,
-  loading: loading.models.user,
-}))
+@connect(({ user, loading }) => ({ user, loading: loading.models.user }))
 @Form.create()
 export default class TableList extends PureComponent {
   state = {
@@ -350,11 +349,11 @@ export default class TableList extends PureComponent {
   columns = [
     {
       title: 'ID',
-      dataIndex: 'id',
+      dataIndex: 'userId',
     },
     {
       title: '用户名',
-      dataIndex: 'name',
+      dataIndex: 'username',
     },
     {
       title: '手机号',
@@ -649,11 +648,11 @@ export default class TableList extends PureComponent {
 
   render() {
     const {
-      user: { data },
+      user: { result },
       loading,
     } = this.props;
-
     const { selectedRows, modalVisible, updateModalVisible, stepFormValues } = this.state;
+
     const menu = (
       <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
         <Menu.Item key="remove">删除</Menu.Item>
@@ -692,7 +691,7 @@ export default class TableList extends PureComponent {
             <StandardTable
               selectedRows={selectedRows}
               loading={loading}
-              data={data}
+              data={result.data}
               columns={this.columns}
               onSelectRow={this.handleSelectRows}
               onChange={this.handleStandardTableChange}

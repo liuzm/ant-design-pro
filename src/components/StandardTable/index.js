@@ -80,6 +80,7 @@ class StandardTable extends PureComponent {
     const rowSelection = {
       selectedRowKeys,
       onChange: this.handleRowSelectChange,
+      type: 'radio',
       getCheckboxProps: record => ({
         disabled: record.disabled,
       }),

@@ -1,56 +1,56 @@
-import { addDict, removeDict, DictList, updateDict } from '../services/api'
+import { addDict, removeDict, DictList, updateDict } from '../services/api';
 
 export default {
-
   namespace: 'systemdict',
 
   state: {
-    data: {
-      list: [],
-      pagination: {},
+    result: {
+      code: '',
+      data: {},
+      msg: '',
     },
   },
 
   effects: {
-    * fetch ({payload}, {call, put}) {
-      const response = yield call(DictList, payload)
+    *fetch({ payload }, { call, put }) {
+      const response = yield call(DictList, payload);
       yield put({
         type: 'save',
         payload: response,
-      })
+      });
     },
-    * add ({payload, callback}, {call, put}) {
-      const response = yield call(addDict, payload)
+    *add({ payload, callback }, { call, put }) {
+      const response = yield call(addDict, payload);
       yield put({
         type: 'save',
         payload: response,
-      })
-      if (callback) callback()
+      });
+      if (callback) callback();
     },
-    * remove ({payload, callback}, {call, put}) {
-      const response = yield call(removeDict, payload)
+    *remove({ payload, callback }, { call, put }) {
+      const response = yield call(removeDict, payload);
       yield put({
         type: 'save',
         payload: response,
-      })
-      if (callback) callback()
+      });
+      if (callback) callback();
     },
-    * update ({payload, callback}, {call, put}) {
-      const response = yield call(updateDict, payload)
+    *update({ payload, callback }, { call, put }) {
+      const response = yield call(updateDict, payload);
       yield put({
         type: 'save',
         payload: response,
-      })
-      if (callback) callback()
+      });
+      if (callback) callback();
     },
   },
 
   reducers: {
-    save (state, action) {
+    save(state, action) {
       return {
         ...state,
-        data: action.payload,
-      }
+        result: action.payload,
+      };
     },
   },
-}
+};

@@ -131,21 +131,20 @@ export async function getFakeCaptcha(mobile) {
  * @returns {Promise<Object>}
  */
 export async function queryUsers(params) {
-  return request(`/api/v1/users?${stringify(params)}`);
+  return request(`/api/sysUser/page?${stringify(params)}`);
 }
 
 export async function removeUser(params) {
-  return request('/api/v1/users', {
-    method: 'POST',
+  return request('/api/sysUser', {
+    method: 'DELETE',
     body: {
       ...params,
-      method: 'delete',
     },
   });
 }
 
 export async function addUser(params) {
-  return request('/api/v1/users', {
+  return request('/api/sysUser', {
     method: 'POST',
     body: {
       ...params,
@@ -155,8 +154,8 @@ export async function addUser(params) {
 }
 
 export async function updateUser(params) {
-  return request('/api/v1/users', {
-    method: 'POST',
+  return request('/api/sysUser', {
+    method: 'PUT',
     body: {
       ...params,
       method: 'update',
@@ -170,7 +169,7 @@ export async function updateUser(params) {
  * @returns {Promise<Object>}
  */
 export async function MenuList(params) {
-  return request(`/api/v1/menus?${stringify(params)}`);
+  return request(`/api/sysMenu?${stringify(params)}`);
 }
 
 export async function removeMenu(params) {
@@ -254,7 +253,7 @@ export async function RoleList(params) {
 }
 
 export async function removeRole(params) {
-  return request('/api/sysRole', {
+  return request(`/api/sysRole/${params.keys}`, {
     method: 'DELETE',
     body: {
       ...params,
@@ -286,35 +285,32 @@ export async function updateRole(params) {
  * @returns {Promise<Object>}
  */
 export async function DictList(params) {
-  return request(`/api/v1/users?${stringify(params)}`);
+  return request(`/api/sysDict/page?${stringify(params)}`);
 }
 
 export async function removeDict(params) {
-  return request('/api/v1/users', {
-    method: 'POST',
+  return request('/api/sysDict', {
+    method: 'DELETE',
     body: {
       ...params,
-      method: 'delete',
     },
   });
 }
 
 export async function addDict(params) {
-  return request('/api/v1/users', {
+  return request('/api/sysDict', {
     method: 'POST',
     body: {
       ...params,
-      method: 'post',
     },
   });
 }
 
 export async function updateDict(params) {
-  return request('/api/v1/users', {
-    method: 'POST',
+  return request('/api/sysDict', {
+    method: 'PUT',
     body: {
       ...params,
-      method: 'update',
     },
   });
 }
