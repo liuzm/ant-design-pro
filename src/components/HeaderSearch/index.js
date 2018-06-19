@@ -5,15 +5,6 @@ import classNames from 'classnames';
 import styles from './index.less';
 
 export default class HeaderSearch extends PureComponent {
-  static defaultProps = {
-    defaultActiveFirstOption: false,
-    onPressEnter: () => {},
-    onSearch: () => {},
-    className: '',
-    placeholder: '',
-    dataSource: [],
-    defaultOpen: false,
-  };
   static propTypes = {
     className: PropTypes.string,
     placeholder: PropTypes.string,
@@ -23,6 +14,17 @@ export default class HeaderSearch extends PureComponent {
     dataSource: PropTypes.array,
     defaultOpen: PropTypes.bool,
   };
+
+  static defaultProps = {
+    defaultActiveFirstOption: false,
+    onPressEnter: () => {},
+    onSearch: () => {},
+    className: '',
+    placeholder: '',
+    dataSource: [],
+    defaultOpen: false,
+  };
+
   state = {
     searchMode: this.props.defaultOpen,
     value: '',
@@ -73,10 +75,11 @@ export default class HeaderSearch extends PureComponent {
           onChange={this.onChange}
         >
           <Input
-            placeholder={placeholder}
             ref={node => {
               this.input = node;
             }}
+            aria-label={placeholder}
+            placeholder={placeholder}
             onKeyDown={this.onKeyDown}
             onBlur={this.leaveSearchMode}
           />

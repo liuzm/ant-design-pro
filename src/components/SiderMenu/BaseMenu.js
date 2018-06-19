@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Menu, Icon } from 'antd';
 import { Link } from 'dva/router';
+import { FormattedMessage } from 'react-intl';
 import pathToRegexp from 'path-to-regexp';
 import { urlToList } from '../_utils/pathTools';
 import styles from './index.less';
@@ -30,7 +31,6 @@ export const getMenuMatches = (flatMenuKeys, path) => {
 export default class BaseMenu extends PureComponent {
   constructor(props) {
     super(props);
-    this.menus = props.menuData;
     this.flatMenuKeys = this.getFlatMenuKeys(props.menuData);
   }
   /**
@@ -52,7 +52,7 @@ export default class BaseMenu extends PureComponent {
    * 获得菜单子节点
    * @memberof SiderMenu
    */
-  getNavMenuItems = menusData => {
+  getNavMenuItems = (menusData, parent) => {
     if (!menusData) {
       return [];
     }
@@ -60,7 +60,7 @@ export default class BaseMenu extends PureComponent {
       .filter(item => item.name && !item.hideInMenu)
       .map(item => {
         // make dom
-        const ItemDom = this.getSubMenuOrItem(item);
+        const ItemDom = this.getSubMenuOrItem(item, parent);
         return this.checkPermissionItem(item.authority, ItemDom);
       })
       .filter(item => item);
@@ -77,16 +77,17 @@ export default class BaseMenu extends PureComponent {
    */
   getSubMenuOrItem = item => {
     if (item.children && item.children.some(child => child.name)) {
+      const name = <FormattedMessage defaultMessage={item.name} id={item.locale} />;
       return (
         <SubMenu
           title={
             item.icon ? (
               <span>
                 {getIcon(item.icon)}
-                <span>{item.name}</span>
+                <span>{name}</span>
               </span>
             ) : (
-              item.name
+              name
             )
           }
           key={item.path}
@@ -104,9 +105,10 @@ export default class BaseMenu extends PureComponent {
    * @memberof SiderMenu
    */
   getMenuItemPath = item => {
+    const name = <FormattedMessage defaultMessage={item.name} id={item.locale} />;
     const itemPath = this.conversionPath(item.path);
     const icon = getIcon(item.icon);
-    const { target, name } = item;
+    const { target } = item;
     // Is it a http link
     if (/^https?:\/\//.test(itemPath)) {
       return (
@@ -172,7 +174,7 @@ export default class BaseMenu extends PureComponent {
         style={this.props.style}
         {...props}
       >
-        {this.getNavMenuItems(this.menus)}
+        {this.getNavMenuItems(this.props.menuData)}
       </Menu>
     );
   }

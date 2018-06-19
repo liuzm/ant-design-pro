@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import { FormattedMessage } from 'react-intl';
 import { Spin, Tag, Menu, Icon, Dropdown, Avatar, Tooltip } from 'antd';
 import moment from 'moment';
 import groupBy from 'lodash/groupBy';
@@ -12,7 +13,7 @@ export default class GlobalHeaderRight extends PureComponent {
     if (notices.length === 0) {
       return {};
     }
-    const newNotices = notices.map((notice) => {
+    const newNotices = notices.map(notice => {
       const newNotice = { ...notice };
       if (newNotice.datetime) {
         newNotice.datetime = moment(notice.datetime).fromNow();
@@ -49,13 +50,16 @@ export default class GlobalHeaderRight extends PureComponent {
     const menu = (
       <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
         <Menu.Item key="userCenter">
-          <Icon type="user" />个人中心
+          <Icon type="user" />
+          <FormattedMessage id="menu.account.center" defaultMessage="account center" />
         </Menu.Item>
         <Menu.Item key="userinfo">
-          <Icon type="setting" />设置
+          <Icon type="setting" />
+          <FormattedMessage id="menu.account.settings" defaultMessage="account settings" />
         </Menu.Item>
         <Menu.Item key="triggerError">
-          <Icon type="close-circle" />触发报错
+          <Icon type="close-circle" />
+          <FormattedMessage id="menu.account.trigger" defaultMessage="Trigger Error" />
         </Menu.Item>
         <Menu.Divider />
         <Menu.Item key="logout">
@@ -69,15 +73,15 @@ export default class GlobalHeaderRight extends PureComponent {
       className = `${styles.right}  ${styles.dark}`;
     }
     return (
-      <div className={className} >
+      <div className={className}>
         <HeaderSearch
           className={`${styles.action} ${styles.search}`}
           placeholder="站内搜索"
           dataSource={['搜索提示一', '搜索提示二', '搜索提示三']}
-          onSearch={(value) => {
+          onSearch={value => {
             console.log('input', value); // eslint-disable-line
           }}
-          onPressEnter={(value) => {
+          onPressEnter={value => {
             console.log('enter', value); // eslint-disable-line
           }}
         />
@@ -87,6 +91,7 @@ export default class GlobalHeaderRight extends PureComponent {
             href="http://pro.ant.design/docs/getting-started"
             rel="noopener noreferrer"
             className={styles.action}
+            title="使用文档"
           >
             <Icon type="question-circle-o" />
           </a>
@@ -128,6 +133,7 @@ export default class GlobalHeaderRight extends PureComponent {
                 size="small"
                 className={styles.avatar}
                 src={currentUser.avatar}
+                alt="avatar"
               />
               <span className={styles.name}>{currentUser.name}</span>
             </span>

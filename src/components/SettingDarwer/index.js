@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
-import { Select, message, List, Switch, Divider } from 'antd';
-import DrawerMenu from 'rc-drawer-menu';
+import { Select, message, List, Switch, Divider, Icon } from 'antd';
+import DrawerMenu from 'rc-drawer';
 import { connect } from 'dva';
 import styles from './index.less';
 import ThemeColor from './ThemeColor';
@@ -21,9 +21,14 @@ const Body = ({ children, title, style }) => (
 @connect(({ setting }) => ({ setting }))
 class SettingDarwer extends PureComponent {
   componentDidMount() {
-    const { themeColor } = this.props.setting;
+    const { themeColor, colorWeak } = this.props.setting;
     if (themeColor !== '#1890FF') {
-      this.colorChange(themeColor);
+      window.less.refresh().then(() => {
+        this.colorChange(themeColor);
+      });
+    }
+    if (colorWeak === 'open') {
+      document.body.className = 'colorWeak';
     }
   }
   getLayOutSetting = () => {
@@ -38,13 +43,13 @@ class SettingDarwer extends PureComponent {
             onSelect={value => this.changeSetting('grid', value)}
             style={{ width: 80 }}
           >
-            <Select.Option value="Wide">Wide</Select.Option>
-            <Select.Option value="Fluid">Fluid</Select.Option>
+            <Select.Option value="Wide">定宽</Select.Option>
+            <Select.Option value="Fluid">流式</Select.Option>
           </Select>,
         ],
       },
       {
-        title: 'Fixed Header',
+        title: '固定 Header',
         action: [
           <Switch
             size="small"
@@ -55,6 +60,7 @@ class SettingDarwer extends PureComponent {
       },
       {
         title: '下滑时隐藏 Header',
+        hide: fixedHeader,
         action: [
           <Switch
             size="small"
@@ -64,7 +70,7 @@ class SettingDarwer extends PureComponent {
         ],
       },
       {
-        title: 'Fix Siderbar',
+        title: '固定 Siderbar',
         action: [
           <Switch
             size="small"
@@ -73,7 +79,9 @@ class SettingDarwer extends PureComponent {
           />,
         ],
       },
-    ];
+    ].filter(item => {
+      return !item.hide;
+    });
   };
   changeSetting = (key, value) => {
     const nextState = { ...this.props.setting };
@@ -83,6 +91,18 @@ class SettingDarwer extends PureComponent {
         nextState.grid = 'Wide';
       } else {
         nextState.grid = 'Fluid';
+      }
+    }
+    if (key === 'fixedHeader') {
+      if (value) {
+        nextState.autoHideHeader = false;
+      }
+    }
+    if (key === 'colorWeak') {
+      if (value === 'open') {
+        document.body.className = 'colorWeak';
+      } else {
+        document.body.className = '';
       }
     }
     this.setState(nextState, () => {
@@ -112,20 +132,34 @@ class SettingDarwer extends PureComponent {
     }, 200);
   };
   render() {
-    const { collapse, silderTheme, themeColor, layout } = this.props.setting;
+    const { collapse, silderTheme, themeColor, layout, colorWeak } = this.props.setting;
     return (
       <div className={styles.settingDarwer}>
-        <div className={styles.mini_bar} onClick={this.togglerContent}>
-          <img
-            alt="logo"
-            src="https://gw.alipayobjects.com/zos/rmsportal/ApQgLmeZDNJMomKNvavq.svg"
-          />
-        </div>
         <DrawerMenu
           parent={null}
           level={null}
-          handleChild={null}
           open={collapse}
+          mask={false}
+          onHandleClick={this.togglerContent}
+          handleChild={
+            !collapse ? (
+              <Icon
+                type="setting"
+                style={{
+                  color: '#FFF',
+                  fontSize: 20,
+                }}
+              />
+            ) : (
+              <Icon
+                type="close"
+                style={{
+                  color: '#FFF',
+                  fontSize: 20,
+                }}
+              />
+            )
+          }
           placement="right"
           width="336px"
           style={{
@@ -177,6 +211,26 @@ class SettingDarwer extends PureComponent {
               dataSource={this.getLayOutSetting()}
               renderItem={item => <List.Item actions={item.action}>{item.title}</List.Item>}
             />
+
+            <Divider />
+
+            <Body title="其他设置 ">
+              <List.Item
+                actions={[
+                  <Select
+                    value={colorWeak}
+                    size="small"
+                    onSelect={value => this.changeSetting('colorWeak', value)}
+                    style={{ width: 80 }}
+                  >
+                    <Select.Option value="close">close</Select.Option>
+                    <Select.Option value="open">open</Select.Option>
+                  </Select>,
+                ]}
+              >
+                色弱模式
+              </List.Item>
+            </Body>
           </div>
         </DrawerMenu>
       </div>

@@ -24,18 +24,18 @@ const { AuthorizedRoute, check } = Authorized;
  * @param {Object} menuData 菜单配置
  * @param {Object} routerData 路由配置
  */
-const getBreadcrumbNameMap = (menuData, routerData) => {
-  const result = {};
-  const childResult = {};
-  for (const i of menuData) {
-    if (!routerData[i.path]) {
-      result[i.path] = i;
-    }
-    if (i.children) {
-      Object.assign(childResult, getBreadcrumbNameMap(i.children, routerData));
-    }
-  }
-  return Object.assign({}, routerData, result, childResult);
+const getBreadcrumbNameMap = (meun, router) => {
+  const routerMap = {};
+  const mergeMeunAndRouter = meunData => {
+    meunData.forEach(meunItem => {
+      routerMap[meunItem.path] = Object.assign(meunItem, router);
+      if (meunItem.children) {
+        mergeMeunAndRouter(meunItem.children);
+      }
+    });
+  };
+  mergeMeunAndRouter(meun);
+  return routerMap;
 };
 
 const query = {
@@ -62,6 +62,7 @@ const query = {
 class BasicLayout extends React.PureComponent {
   getContext() {
     const { location, routerData, menuData } = this.props;
+    console.log(getBreadcrumbNameMap(menuData, routerData));
     return {
       location,
       breadcrumbNameMap: getBreadcrumbNameMap(menuData, routerData),
@@ -84,11 +85,10 @@ class BasicLayout extends React.PureComponent {
     return title;
   }
   getLayoutStyle = () => {
-    const { fixSiderbar } = this.props;
-    if (fixSiderbar) {
+    const { fixSiderbar, collapsed, layout } = this.props;
+    if (fixSiderbar && layout !== 'topmenu') {
       return {
-        height: '100vh',
-        overflow: 'auto',
+        paddingLeft: collapsed ? '80px' : '256px',
       };
     }
     return null;

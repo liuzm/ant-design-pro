@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import { Layout, Menu, Icon } from 'antd';
 import pathToRegexp from 'path-to-regexp';
 import { Link } from 'dva/router';
+import { FormattedMessage } from 'react-intl';
 import styles from './index.less';
 import BaseMenu, { getMenuMatches } from './BaseMenu';
 import { urlToList } from '../_utils/pathTools';
@@ -65,6 +66,15 @@ export const getMenuMatchKeys = (flatMenuKeys, paths) =>
   );
 
 export default class SiderMenu extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.flatMenuKeys = getFlatMenuKeys(props.menuData);
+    this.state = {
+      pathname: props.location.pathname,
+      openKeys: getDefaultCollapsedSubMenus(props),
+    };
+  }
+
   static getDerivedStateFromProps(props, state) {
     const { pathname } = state;
     if (props.location.pathname !== pathname) {
@@ -75,16 +85,6 @@ export default class SiderMenu extends PureComponent {
     }
     return null;
   }
-  constructor(props) {
-    super(props);
-    this.menus = props.menuData;
-    this.flatMenuKeys = getFlatMenuKeys(props.menuData);
-    this.state = {
-      pathname: props.location.pathname,
-      openKeys: getDefaultCollapsedSubMenus(props),
-    };
-  }
-
   /**
    * Convert pathname to openKeys
    * /list/search/articles = > ['list','/list/search']
@@ -105,13 +105,15 @@ export default class SiderMenu extends PureComponent {
   getMenuItemPath = item => {
     const itemPath = this.conversionPath(item.path);
     const icon = getIcon(item.icon);
-    const { target, name } = item;
+    const { target, name, locale } = item;
     // Is it a http link
     if (/^https?:\/\//.test(itemPath)) {
       return (
         <a href={itemPath} target={target}>
           {icon}
-          <span>{name}</span>
+          <span>
+            <FormattedMessage id={locale} defaultMessage={name} />
+          </span>
         </a>
       );
     }
@@ -129,7 +131,9 @@ export default class SiderMenu extends PureComponent {
         }
       >
         {icon}
-        <span>{name}</span>
+        <span>
+          <FormattedMessage id={locale} defaultMessage={name} />
+        </span>
       </Link>
     );
   };
@@ -150,7 +154,7 @@ export default class SiderMenu extends PureComponent {
                   <span>{item.name}</span>
                 </span>
               ) : (
-                item.name
+                <FormattedMessage id={item.locale} defaultMessage={item.name} />
               )
             }
             key={item.path}
@@ -220,7 +224,7 @@ export default class SiderMenu extends PureComponent {
     });
   };
   render() {
-    const { logo, collapsed, onCollapse, theme } = this.props;
+    const { logo, collapsed, onCollapse, fixSiderbar, theme } = this.props;
     const { openKeys } = this.state;
     const defaultProps = collapsed ? {} : { openKeys };
     return (
@@ -231,7 +235,9 @@ export default class SiderMenu extends PureComponent {
         breakpoint="lg"
         onCollapse={onCollapse}
         width={256}
-        className={`${styles.sider} ${theme === 'light' ? styles.light : ''}`}
+        className={`${styles.sider} ${fixSiderbar ? styles.fixSiderbar : ''} ${
+          theme === 'light' ? styles.light : ''
+        }`}
       >
         <div className={styles.logo} key="logo" id="logo">
           <Link to="/">

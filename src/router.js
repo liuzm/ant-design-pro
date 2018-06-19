@@ -11,11 +11,15 @@ import cnLocale from './locale/zh-CN';
 
 const { ConnectedRouter } = routerRedux;
 const { AuthorizedRoute } = Authorized;
+
 dynamic.setDefaultLoadingComponent(() => {
   return <Spin size="large" className={styles.globalSpin} />;
 });
 
 function getLang() {
+  if (window) {
+    return 'en-US';
+  }
   return (window.localStorage && localStorage.getItem('locale')) ||
     (navigator.language || navigator.browserLanguage).toLowerCase() === 'en-us'
     ? 'en-US'

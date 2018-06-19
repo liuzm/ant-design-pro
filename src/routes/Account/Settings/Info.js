@@ -29,6 +29,15 @@ export default class Info extends Component {
       mode: 'inline',
     };
   }
+  static getDerivedStateFromProps(props, state) {
+    const { match, location } = props;
+    let selectKey = location.pathname.replace(`${match.path}/`, '');
+    selectKey = menuMap[selectKey] ? selectKey : 'base';
+    if (selectKey !== state.selectKey) {
+      return { selectKey };
+    }
+    return null;
+  }
   componentDidMount() {
     window.addEventListener('resize', this.resize);
     this.resize();
