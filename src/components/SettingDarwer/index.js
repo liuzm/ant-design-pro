@@ -23,7 +23,9 @@ class SettingDarwer extends PureComponent {
   componentDidMount() {
     const { themeColor, colorWeak } = this.props.setting;
     if (themeColor !== '#1890FF') {
-      this.colorChange(themeColor);
+      window.less.refresh().then(() => {
+        this.colorChange(themeColor);
+      });
     }
     if (colorWeak === 'open') {
       document.body.className = 'colorWeak';
@@ -58,7 +60,7 @@ class SettingDarwer extends PureComponent {
       },
       {
         title: '下滑时隐藏 Header',
-        hide: fixedHeader,
+        hide: !fixedHeader,
         action: [
           <Switch
             size="small"
