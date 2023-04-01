@@ -1,8 +1,8 @@
+import { history } from '@umijs/max';
 import { Button, Result } from 'antd';
 import React from 'react';
-import { history } from 'umi';
 
-const NoFoundPage: React.FC<{}> = () => (
+const NoFoundPage: React.FC = () => (
   <Result
     status="404"
     title="404"
