@@ -1,15 +1,18 @@
-import { configUmiAlias, createConfig } from '@umijs/max/test';
+import { configUmiAlias, createConfig } from '@umijs/max/test.js';
 
-export default async () => {
+export default async (): Promise<any> => {
   const config = await configUmiAlias({
     ...createConfig({
       target: 'browser',
     }),
   });
-  console.log(JSON.stringify(config));
-
   return {
     ...config,
+    testPathIgnorePatterns: ['/node_modules/', '/.worktrees/'],
+    moduleNameMapper: {
+      ...(config.moduleNameMapper || {}),
+      '^mermaid$': '<rootDir>/tests/__mocks__/mermaid.js',
+    },
     testEnvironmentOptions: {
       ...(config?.testEnvironmentOptions || {}),
       url: 'http://localhost:8000',

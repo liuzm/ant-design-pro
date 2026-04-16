@@ -1,12 +1,15 @@
-import { outLogin } from '@/services/ant-design-pro/api';
-import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
-import { useEmotionCss } from '@ant-design/use-emotion-css';
+import {
+  LogoutOutlined,
+  SettingOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
 import { history, useModel } from '@umijs/max';
+import type { MenuProps } from 'antd';
 import { Spin } from 'antd';
-import { stringify } from 'querystring';
-import type { MenuInfo } from 'rc-menu/lib/interface';
-import React, { useCallback } from 'react';
+import { createStyles } from 'antd-style';
+import React from 'react';
 import { flushSync } from 'react-dom';
+import { outLogin } from '@/services/ant-design-pro/api';
 import HeaderDropdown from '../HeaderDropdown';
 
 export type GlobalHeaderRightProps = {
@@ -20,28 +23,9 @@ export const AvatarName = () => {
   return <span className="anticon">{currentUser?.name}</span>;
 };
 
-export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu, children }) => {
-  /**
-   * 退出登录，并且将当前的 url 保存
-   */
-  const loginOut = async () => {
-    await outLogin();
-    const { search, pathname } = window.location;
-    const urlParams = new URL(window.location.href).searchParams;
-    /** 此方法会跳转到 redirect 参数所在的位置 */
-    const redirect = urlParams.get('redirect');
-    // Note: There may be security issues, please note
-    if (window.location.pathname !== '/user/login' && !redirect) {
-      history.replace({
-        pathname: '/user/login',
-        search: stringify({
-          redirect: pathname + search,
-        }),
-      });
-    }
-  };
-  const actionClassName = useEmotionCss(({ token }) => {
-    return {
+const useStyles = createStyles(({ token }) => {
+  return {
+    action: {
       display: 'flex',
       height: '48px',
       marginLeft: 'auto',
@@ -53,27 +37,52 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu, childre
       '&:hover': {
         backgroundColor: token.colorBgTextHover,
       },
-    };
-  });
+    },
+  };
+});
+
+export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({
+  menu,
+  children,
+}) => {
+  /**
+   * 退出登录，并且将当前的 url 保存
+   */
+  const loginOut = async () => {
+    await outLogin();
+    const { search, pathname } = window.location;
+    const urlParams = new URL(window.location.href).searchParams;
+    const searchParams = new URLSearchParams({
+      redirect: pathname + search,
+    });
+    /** 此方法会跳转到 redirect 参数所在的位置 */
+    const redirect = urlParams.get('redirect');
+    // Note: There may be security issues, please note
+    if (window.location.pathname !== '/user/login' && !redirect) {
+      history.replace({
+        pathname: '/user/login',
+        search: searchParams.toString(),
+      });
+    }
+  };
+  const { styles } = useStyles();
+
   const { initialState, setInitialState } = useModel('@@initialState');
 
-  const onMenuClick = useCallback(
-    (event: MenuInfo) => {
-      const { key } = event;
-      if (key === 'logout') {
-        flushSync(() => {
-          setInitialState((s) => ({ ...s, currentUser: undefined }));
-        });
-        loginOut();
-        return;
-      }
-      history.push(`/account/${key}`);
-    },
-    [setInitialState],
-  );
+  const onMenuClick: MenuProps['onClick'] = (event) => {
+    const { key } = event;
+    if (key === 'logout') {
+      flushSync(() => {
+        setInitialState((s) => ({ ...s, currentUser: undefined }));
+      });
+      loginOut();
+      return;
+    }
+    history.push(`/account/${key}`);
+  };
 
   const loading = (
-    <span className={actionClassName}>
+    <span className={styles.action}>
       <Spin
         size="small"
         style={{
@@ -90,7 +99,7 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu, childre
 
   const { currentUser } = initialState;
 
-  if (!currentUser || !currentUser.name) {
+  if (!currentUser?.name) {
     return loading;
   }
 

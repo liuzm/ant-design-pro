@@ -1,3 +1,4 @@
+import './tailwind.css';
 import { useIntl } from '@umijs/max';
 import { Button, message, notification } from 'antd';
 import defaultSettings from '../config/defaultSettings';
@@ -32,7 +33,7 @@ if (pwa) {
     const reloadSW = async () => {
       // Check if there is sw whose state is waiting in ServiceWorkerRegistration
       // https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerRegistration
-      const worker = e.detail && e.detail.waiting;
+      const worker = e.detail?.waiting;
       if (!worker) {
         return true;
       }
@@ -66,8 +67,10 @@ if (pwa) {
       </Button>
     );
     notification.open({
-      message: useIntl().formatMessage({ id: 'app.pwa.serviceworker.updated' }),
-      description: useIntl().formatMessage({ id: 'app.pwa.serviceworker.updated.hint' }),
+      title: useIntl().formatMessage({ id: 'app.pwa.serviceworker.updated' }),
+      description: useIntl().formatMessage({
+        id: 'app.pwa.serviceworker.updated.hint',
+      }),
       btn,
       key,
       onClose: async () => null,

@@ -1,40 +1,55 @@
 import { GithubOutlined } from '@ant-design/icons';
 import { DefaultFooter } from '@ant-design/pro-components';
-import { useIntl } from '@umijs/max';
+import packageJson from '@root/package.json';
+import GitUrlParse from 'git-url-parse';
 import React from 'react';
 
+const getRepoUrl = () => {
+  if (!packageJson.repository)
+    return 'https://github.com/ant-design/ant-design-pro';
+  const parsed = GitUrlParse(packageJson.repository);
+  return `https://${parsed.source}/${parsed.owner}/${parsed.name}`;
+};
+
+const REPO = getRepoUrl();
+
+// Git commit hash, can be updated via CI/CD (GitHub Actions or Cloudflare Pages)
+const COMMIT_HASH =
+  process.env.COMMIT_HASH || process.env.CF_PAGES_COMMIT_SHA || '';
+
 const Footer: React.FC = () => {
-  const intl = useIntl();
-  const defaultMessage = intl.formatMessage({
-    id: 'app.copyright.produced',
-    defaultMessage: '蚂蚁集团体验技术部出品',
-  });
-
-  const currentYear = new Date().getFullYear();
-
   return (
     <DefaultFooter
+      copyright={false}
       style={{
         background: 'none',
       }}
-      copyright={`${currentYear} ${defaultMessage}`}
       links={[
         {
-          key: 'Ant Design Pro',
-          title: 'Ant Design Pro',
-          href: 'https://pro.ant.design',
+          key: 'version',
+          title: `v${packageJson.version}`,
+          href: REPO,
           blankTarget: true,
         },
+        ...(COMMIT_HASH
+          ? [
+              {
+                key: 'commit',
+                title: COMMIT_HASH.slice(0, 7),
+                href: `${REPO}/commit/${COMMIT_HASH}`,
+                blankTarget: true,
+              },
+            ]
+          : []),
         {
-          key: 'github',
-          title: <GithubOutlined />,
-          href: 'https://github.com/ant-design/ant-design-pro',
-          blankTarget: true,
-        },
-        {
-          key: 'Ant Design',
-          title: 'Ant Design',
-          href: 'https://ant.design',
+          key: 'repo',
+          title: (
+            <>
+              <GithubOutlined style={{ marginRight: 8 }} />
+              Ant Design Pro
+            </>
+          ),
+          href: REPO,
           blankTarget: true,
         },
       ]}

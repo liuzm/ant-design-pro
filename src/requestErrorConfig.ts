@@ -58,8 +58,8 @@ export const errorConfig: RequestConfig = {
               break;
             case ErrorShowType.NOTIFICATION:
               notification.open({
+                title: errorCode,
                 description: errorMessage,
-                message: errorCode,
               });
               break;
             case ErrorShowType.REDIRECT:
@@ -89,7 +89,7 @@ export const errorConfig: RequestConfig = {
   requestInterceptors: [
     (config: RequestOptions) => {
       // 拦截请求配置，进行个性化处理。
-      const url = config?.url?.concat('?token = 123');
+      const url = config?.url?.concat('?token=123');
       return { ...config, url };
     },
   ],

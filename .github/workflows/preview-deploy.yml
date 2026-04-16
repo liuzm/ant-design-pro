@@ -19,17 +19,24 @@ jobs:
     if: github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.conclusion == 'success'
     steps:
       - name: download pr artifact
-        uses: dawidd6/action-download-artifact@v2
+        uses: dawidd6/action-download-artifact@v6
         with:
           workflow: ${{ github.event.workflow_run.workflow_id }}
           name: pr
 
       - name: save PR id
         id: pr
-        run: echo "::set-output name=id::$(<pr-id.txt)"
+        run: |
+          PR_ID=$(<pr-id.txt)
+          # Validate PR ID is numeric to prevent code injection
+          if [[ ! "$PR_ID" =~ ^[0-9]+$ ]]; then
+            echo "Invalid PR ID: $PR_ID"
+            exit 1
+          fi
+          echo "id=$PR_ID" >> "$GITHUB_OUTPUT"
 
       - name: download dist artifact
-        uses: dawidd6/action-download-artifact@v2
+        uses: dawidd6/action-download-artifact@v6
         with:
           workflow: ${{ github.event.workflow_run.workflow_id }}
           workflow_conclusion: success
@@ -77,14 +84,21 @@ jobs:
     if: github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.conclusion == 'failure'
     steps:
       - name: download pr artifact
-        uses: dawidd6/action-download-artifact@v2
+        uses: dawidd6/action-download-artifact@v6
         with:
           workflow: ${{ github.event.workflow_run.workflow_id }}
           name: pr
 
       - name: save PR id
         id: pr
-        run: echo "::set-output name=id::$(<pr-id.txt)"
+        run: |
+          PR_ID=$(<pr-id.txt)
+          # Validate PR ID is numeric to prevent code injection
+          if [[ ! "$PR_ID" =~ ^[0-9]+$ ]]; then
+            echo "Invalid PR ID: $PR_ID"
+            exit 1
+          fi
+          echo "id=$PR_ID" >> "$GITHUB_OUTPUT"
 
       - name: The job failed
         uses: actions-cool/maintain-one-comment@v1.2.1
